@@ -1,0 +1,30 @@
+# .NET build output
+**/[Bb]in/
+**/[Oo]bj/
+
+# Test output
+**/TestResults/
+**/coverage/
+*.coverage
+*.coveragexml
+
+# NuGet packages
+**/packages/
+*.nupkg
+*.snupkg
+
+# IDE and editor files
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
