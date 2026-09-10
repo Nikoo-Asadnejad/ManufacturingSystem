@@ -44,6 +44,12 @@ PressureSensor ────┘               │
 6. `StageProcessor` executes selected stages and releases their resources when execution finishes.
 7. `ResourceCoordinator` acquires resources in ordinal ID order and releases them in reverse order.
 
+## Architecture and modules
+
+![Manufacturing System architecture and module diagram](docs/SystemArchitecture.svg)
+
+The sensor, workflow, stage, and resource-management modules currently live in the main `ManufacturingSystem` project and collaborate through their interfaces. `InternalQueue` is a separate project referenced by the host and provides the channel-backed event boundary between snapshot production and workflow processing.
+
 ## Concurrency concerns
 
 Stages can execute in parallel and may require overlapping resources. `ResourceCoordinator` and `Resource` protect those resources from deadlock, atomicity violations, and stale reads between threads.

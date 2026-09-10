@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="613" viewBox="0 0 1800 920" role="img" aria-labelledby="title description">
+  <title id="title">Manufacturing System architecture and modules</title>
+  <desc id="description">The host composes sensor, internal queue, workflow, stage, and resource-management modules. Measurements become snapshots, snapshots drive workflows, workflows select parallel stages, and stages acquire thread-safe resources.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .canvas { fill: #f8fafc; }
+      .host { fill: #0f172a; stroke: #0f172a; stroke-width: 2; }
+      .module { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+      .queue-module { fill: #f8fafc; stroke: #64748b; stroke-width: 2; stroke-dasharray: 9 6; }
+      .node { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
+      .sensor-node { fill: #ecfeff; stroke: #0891b2; }
+      .workflow-node { fill: #f5f3ff; stroke: #7c3aed; }
+      .stage-node { fill: #fff7ed; stroke: #ea580c; }
+      .resource-node { fill: #ecfdf5; stroke: #059669; }
+      .title { font: 700 25px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #ffffff; }
+      .subtitle { font: 400 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #cbd5e1; }
+      .module-title { font: 700 21px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .module-subtitle { font: 400 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .label { font: 600 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1e293b; text-anchor: middle; }
+      .small { font: 400 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; text-anchor: middle; }
+      .edge-label { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1d4ed8; text-anchor: middle; }
+      .flow { fill: none; stroke: #334155; stroke-width: 2; marker-end: url(#arrow); }
+      .main-flow { fill: none; stroke: #2563eb; stroke-width: 3; marker-end: url(#arrow-blue); }
+      .compose { fill: none; stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 6 6; }
+    </style>
+  </defs>
+
+  <rect class="canvas" x="0" y="0" width="1800" height="920" rx="18"/>
+
+  <rect class="host" x="40" y="25" width="1720" height="90" rx="14"/>
+  <text class="title" x="75" y="65">ManufacturingSystem host</text>
+  <text class="subtitle" x="75" y="91">Program.cs is the composition root: it registers modules, interfaces, and background services.</text>
+
+  <path class="compose" d="M 210 115 V 150"/>
+  <path class="compose" d="M 545 115 V 150"/>
+  <path class="compose" d="M 880 115 V 150"/>
+  <path class="compose" d="M 1240 115 V 150"/>
+  <path class="compose" d="M 1595 115 V 150"/>
+
+  <rect class="module" x="40" y="150" width="340" height="720" rx="14"/>
+  <text class="module-title" x="65" y="187">Sensors</text>
+  <text class="module-subtitle" x="65" y="211">Measurements and snapshot generation</text>
+
+  <rect class="node sensor-node" x="65" y="245" width="140" height="65" rx="10"/>
+  <text class="label" x="135" y="274">Temperature</text>
+  <text class="small" x="135" y="295">sensor</text>
+  <rect class="node sensor-node" x="215" y="245" width="140" height="65" rx="10"/>
+  <text class="label" x="285" y="274">Pressure</text>
+  <text class="small" x="285" y="295">sensor</text>
+
+  <rect class="node sensor-node" x="80" y="355" width="260" height="70" rx="10"/>
+  <text class="label" x="210" y="384">BroadcastBlock</text>
+  <text class="small" x="210" y="407">SensorMeasurement</text>
+
+  <rect class="node sensor-node" x="65" y="475" width="140" height="70" rx="10"/>
+  <text class="label" x="135" y="504">Temperature</text>
+  <text class="small" x="135" y="527">consumer</text>
+  <rect class="node sensor-node" x="215" y="475" width="140" height="70" rx="10"/>
+  <text class="label" x="285" y="504">Pressure</text>
+  <text class="small" x="285" y="527">consumer</text>
+
+  <rect class="node sensor-node" x="80" y="590" width="260" height="90" rx="10"/>
+  <text class="label" x="210" y="620">SensorSnapshotGenerator</text>
+  <text class="small" x="210" y="644">waits for both sensor types</text>
+  <text class="small" x="210" y="663">BackgroundService</text>
+
+  <path class="flow" d="M 135 310 V 335 H 210 V 355"/>
+  <path class="flow" d="M 285 310 V 335 H 210 V 355"/>
+  <path class="flow" d="M 210 425 V 450 H 135 V 475"/>
+  <path class="flow" d="M 210 425 V 450 H 285 V 475"/>
+  <path class="flow" d="M 135 545 V 565 H 210 V 590"/>
+  <path class="flow" d="M 285 545 V 565 H 210 V 590"/>
+
+  <rect class="queue-module" x="420" y="150" width="250" height="720" rx="14"/>
+  <text class="module-title" x="445" y="187">InternalQueue</text>
+  <text class="module-subtitle" x="445" y="211">(.NET Channels)</text>
+
+  <rect class="node" x="450" y="500" width="190" height="70" rx="10"/>
+  <text class="label" x="545" y="529">IEventBus</text>
+  <text class="small" x="545" y="552">EventBus</text>
+  <rect class="node" x="450" y="600" width="190" height="70" rx="10"/>
+  <text class="label" x="545" y="629">Channel</text>
+  <text class="small" x="545" y="652">IInternalEvent</text>
+  <path class="flow" d="M 545 570 V 600"/>
+
+  <rect class="module" x="710" y="150" width="340" height="720" rx="14"/>
+  <text class="module-title" x="735" y="187">Workflow</text>
+  <text class="module-subtitle" x="735" y="211">Snapshot decisions and orchestration</text>
+
+  <rect class="node workflow-node" x="750" y="245" width="260" height="70" rx="10"/>
+  <text class="label" x="880" y="274">IRule implementations</text>
+  <text class="small" x="880" y="297">temperature and pressure rules</text>
+  <rect class="node workflow-node" x="750" y="350" width="260" height="70" rx="10"/>
+  <text class="label" x="880" y="379">IWorkflow</text>
+  <text class="small" x="880" y="402">ProductionWorkflow</text>
+  <rect class="node workflow-node" x="750" y="460" width="260" height="80" rx="10"/>
+  <text class="label" x="880" y="490">IWorkflowProcessor</text>
+  <text class="small" x="880" y="515">WorkflowProcessor</text>
+  <rect class="node workflow-node" x="750" y="590" width="260" height="90" rx="10"/>
+  <text class="label" x="880" y="620">SensorSnapshotConsumer</text>
+  <text class="small" x="880" y="644">reads queued snapshots</text>
+  <text class="small" x="880" y="663">BackgroundService</text>
+
+  <path class="flow" d="M 880 590 V 540"/>
+  <path class="flow" d="M 880 460 V 420"/>
+  <path class="flow" d="M 880 350 V 315"/>
+
+  <rect class="module" x="1090" y="150" width="300" height="720" rx="14"/>
+  <text class="module-title" x="1115" y="187">Stages</text>
+  <text class="module-subtitle" x="1115" y="211">Concurrent stage execution</text>
+
+  <rect class="node stage-node" x="1120" y="460" width="240" height="80" rx="10"/>
+  <text class="label" x="1240" y="490">IStageProcessor</text>
+  <text class="small" x="1240" y="515">Parallel.ForEach</text>
+
+  <rect class="node stage-node" x="1110" y="610" width="80" height="65" rx="10"/>
+  <text class="label" x="1150" y="648">Stage 1</text>
+  <rect class="node stage-node" x="1200" y="610" width="80" height="65" rx="10"/>
+  <text class="label" x="1240" y="648">Stage 2</text>
+  <rect class="node stage-node" x="1290" y="610" width="80" height="65" rx="10"/>
+  <text class="label" x="1330" y="648">Stage 3</text>
+  <text class="edge-label" x="1240" y="585">parallel execution</text>
+  <path class="flow" d="M 1240 540 V 570 H 1150 V 610"/>
+  <path class="flow" d="M 1240 540 V 610"/>
+  <path class="flow" d="M 1240 540 V 570 H 1330 V 610"/>
+
+  <rect class="module" x="1430" y="150" width="330" height="720" rx="14"/>
+  <text class="module-title" x="1455" y="187">Resource Management</text>
+  <text class="module-subtitle" x="1455" y="211">Thread-safe resource ownership</text>
+
+  <rect class="node resource-node" x="1470" y="460" width="250" height="80" rx="10"/>
+  <text class="label" x="1595" y="490">IResourceCoordinator</text>
+  <text class="small" x="1595" y="515">ResourceCoordinator</text>
+  <rect class="node resource-node" x="1470" y="600" width="250" height="130" rx="10"/>
+  <text class="label" x="1595" y="630">Resource A / B / C</text>
+  <text class="small" x="1595" y="655">SemaphoreSlim</text>
+  <text class="small" x="1595" y="676">Volatile + Interlocked</text>
+  <text class="small" x="1595" y="708">ordered acquire</text>
+  <text class="small" x="1595" y="725">reverse-order release</text>
+  <path class="flow" d="M 1595 540 V 600"/>
+
+  <path class="main-flow" d="M 340 635 C 390 635, 400 535, 450 535"/>
+  <text class="edge-label" x="393" y="575">publish snapshot</text>
+  <path class="main-flow" d="M 640 635 H 750"/>
+  <text class="edge-label" x="695" y="621">read</text>
+  <path class="main-flow" d="M 1010 500 H 1120"/>
+  <text class="edge-label" x="1065" y="486">stage IDs</text>
+  <path class="main-flow" d="M 1360 500 H 1470"/>
+  <text class="edge-label" x="1415" y="486">acquire / release</text>
+
+  <text class="module-subtitle" x="900" y="900" text-anchor="middle">Runtime flow: measurement broadcast → snapshot → channel → workflow → parallel stages → thread-safe resources</text>
+</svg>
