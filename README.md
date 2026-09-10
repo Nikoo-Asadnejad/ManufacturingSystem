@@ -114,10 +114,4 @@ dotnet test test/ManufacturingSystem.Test/ManufacturingSystem.Test.csproj
 
 The tests use xUnit, Moq, constructor-based setup, and explicit Arrange-Act-Assert sections.
 
-## Current scope
 
-- Communication is in-process and in-memory.
-- Queued snapshots are lost when the process stops.
-- `BroadcastBlock<T>` distributes measurements only to subscribers in the current process.
-- `SensorSnapshotGenerator` does not poll sensors. Another caller or service must invoke each sensor's `ReadAsync` method so measurements are broadcast.
-- A snapshot is created after both a temperature and a pressure measurement have arrived.
