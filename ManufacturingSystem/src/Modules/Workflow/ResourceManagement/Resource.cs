@@ -46,6 +46,7 @@ internal sealed class Resource : IResource
     public bool Release(CancellationToken cancellationToken)
     {
         _semaphore.Wait();
+      
         try
         {
             MarkIdle();

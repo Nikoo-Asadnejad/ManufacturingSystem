@@ -25,14 +25,17 @@ internal sealed class WorkflowProcessor(
             {
                 stageProcessor.Execute(stageIds, cancellationToken);
             }
+            else
+            {
+                logger.LogWarning("No Stages were found to run for workflowId {wId}", workflow.Id);
+            }
         }
-        catch (Exception exception) when (exception is not OperationCanceledException)
+        catch (Exception exception)
         {
             logger.LogError(
                 exception,
-                "Workflow {Workflow} failed for sensor snapshot {Sequence}.",
-                workflow.GetType().Name,
-                snapshot.Sequence);
+                "Workflow {Workflow} failed for sensor snapshot .",
+                workflow.GetType().Name);
         }
     }
 
@@ -52,10 +55,9 @@ internal sealed class WorkflowProcessor(
         if (logger.IsEnabled(LogLevel.Information))
         {
             logger.LogInformation(
-                "Workflow {Workflow} selected stages {Stages} for sensor snapshot {Sequence}.",
+                "Workflow {Workflow} selected stages {Stages} for sensor snapshot.",
                 workflow.GetType().Name,
-                stageIds,
-                snapshot.Sequence);
+                stageIds);
         }
 
         return stageIds;
