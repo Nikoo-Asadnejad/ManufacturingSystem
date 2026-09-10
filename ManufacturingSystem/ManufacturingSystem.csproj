@@ -15,4 +15,9 @@
         <Compile Remove="src/Libraries/InternalQueue/**/*.cs" />
         <ProjectReference Include="src/Libraries/InternalQueue/InternalQueue.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="ManufacturingSystem.Test" />
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    </ItemGroup>
 </Project>
