@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Libraries.InternalQueue;
+namespace InternalQueue;
 
 public interface IInternalEvent
 {

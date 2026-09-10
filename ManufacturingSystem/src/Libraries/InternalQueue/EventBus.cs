@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 
-namespace ManufacturingSystem.Libraries.InternalQueue;
+namespace InternalQueue;
 
 public sealed class EventBus : IEventBus
 {
