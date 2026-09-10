@@ -1,6 +1,9 @@
 # Manufacturing System
 
-A .NET 10 worker service that converts sensor measurements into manufacturing workflow and stage execution.
+A .NET 10 worker that models a manufacturing workflow driven by temperature and
+pressure measurements. It captures an immutable sensor snapshot every polling
+interval, evaluates workflow rules, and runs eligible stages while coordinating
+shared resources.
 
 ## Processing flow
 
