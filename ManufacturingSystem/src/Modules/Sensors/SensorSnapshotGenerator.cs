@@ -1,22 +1,23 @@
 using System.Threading.Tasks.Dataflow;
+using InternalQueue;
 
 namespace ManufacturingSystem.Modules.Sensors;
 
 internal sealed class SensorSnapshotGenerator : BackgroundService
 {
     private static readonly TimeSpan GenerationInterval = TimeSpan.FromMilliseconds(100);
-    private readonly ISensor[] _sensors;
     private readonly BufferBlock<SensorMeasurement> _temperatureConsumer = new();
     private readonly BufferBlock<SensorMeasurement> _pressureConsumer = new();
+    private readonly IEventBus _eventBus;
     private readonly ILogger<SensorSnapshotGenerator> _logger;
     private long _sequence;
 
     public SensorSnapshotGenerator(
-        IEnumerable<ISensor> sensors,
         BroadcastBlock<SensorMeasurement> broadcaster,
+        IEventBus eventBus,
         ILogger<SensorSnapshotGenerator> logger)
     {
-        _sensors = sensors.ToArray();
+        _eventBus = eventBus;
         _logger = logger;
 
         broadcaster.LinkTo(
@@ -40,15 +41,15 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
                 pressureMeasurement);
 
             var snapshot = new SensorSnapshot(
-                ++_sequence,
                 DateTimeOffset.UtcNow,
                 measurements.ToDictionary(
                     measurement => measurement.SensorType,
                     measurement => measurement.Value));
 
+            await _eventBus.PublishAsync(snapshot, stoppingToken);
+
             _logger.LogInformation(
-                "Generated sensor snapshot {Sequence} at {Timestamp}.",
-                snapshot.Sequence,
+                "Generated sensor snapshot at {Timestamp}.",
                 snapshot.Timestamp);
 
             // check there would be no issue when measurments are not created at same time
