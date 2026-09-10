@@ -1,5 +1,6 @@
 using ManufacturingSystem.Modules.ResourceManagement;
-using ManufacturingSystem.Modules.Stages;
+
+namespace ManufacturingSystem.Modules.Stages;
 
 internal interface IStage
 {

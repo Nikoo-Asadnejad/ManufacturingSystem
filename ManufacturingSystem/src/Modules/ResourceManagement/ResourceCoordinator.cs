@@ -1,6 +1,6 @@
 namespace ManufacturingSystem.Modules.ResourceManagement;
 
-internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IResourceCoordinator
+internal sealed class ResourceCoordinator(IEnumerable<Resource> resources , ILogger<ResourceCoordinator> logger) : IResourceCoordinator
 {
     private readonly Dictionary<string, Resource> _resources = CreateResourceMap(resources);
 
@@ -34,7 +34,7 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
         ];
     }
 
-    private static Resource[] AcquireResources(
+    private  Resource[] AcquireResources(
         Resource[] resourcesToAcquire,
         CancellationToken acquisitionCancellationToken)
     {
@@ -53,6 +53,11 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
             }
 
             return acquiredResources.ToArray();
+        }
+        catch(Exception e)
+        {
+            logger.LogError(e ,"Exception occured during resource aquirement.");
+            return [];
         }
         finally
         {
