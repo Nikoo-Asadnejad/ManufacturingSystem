@@ -22,6 +22,7 @@ public sealed class IWorkflowProcessorTests
         _workflowMock
             .SetupGet(workflow => workflow.Id)
             .Returns(WorkflowId.Production);
+       
         loggerMock
             .Setup(logger => logger.IsEnabled(LogLevel.Information))
             .Returns(false);

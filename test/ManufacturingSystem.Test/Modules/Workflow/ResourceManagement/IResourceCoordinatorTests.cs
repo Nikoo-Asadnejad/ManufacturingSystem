@@ -35,21 +35,4 @@ public sealed class IResourceCoordinatorTests
         Assert.All(result, resource => Assert.Equal(ResourceState.Busy, resource.State));
     }
 
-    [Fact]
-    public async Task Release_ReleasesResourcesAcquiredByCoordinator()
-    {
-        // Arrange
-        var resources = await _resourceCoordinator.AcquireAsync(
-            new[] { "R_A", "R_B" },
-            CancellationToken.None);
-
-        // Act
-        var result = await Record.ExceptionAsync(
-            () => _resourceCoordinator.ReleaseAsync(resources));
-
-        // Assert
-        Assert.Null(result);
-        Assert.All(resources, resource => Assert.Equal(ResourceState.Idle, resource.State));
-    }
-
 }

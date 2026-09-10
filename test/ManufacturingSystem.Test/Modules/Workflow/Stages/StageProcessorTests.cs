@@ -80,7 +80,7 @@ public sealed class StageProcessorTests
         
         resourceCoordinator.Verify(rc=> rc.ReleaseAsync(
             It.IsAny<IReadOnlyList<IResource>>(),
-            It.IsAny<CancellationToken>()) , Times.AtLeastOnce);
+            It.IsAny<CancellationToken>()) , Times.Once);
     }
 
     [Fact]
