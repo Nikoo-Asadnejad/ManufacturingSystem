@@ -7,7 +7,8 @@ namespace ManufacturingSystem.Sensors;
 internal sealed class SensorSnapshotGenerator : BackgroundService
 {
     private static readonly TimeSpan GenerationInterval = TimeSpan.FromMilliseconds(100);
-    private readonly BufferBlock<IBroadcastEvent> _measurementConsumer = new();
+    private readonly BufferBlock<IBroadcastEvent> _tempretureMeasurementConsumer = new();
+     private readonly BufferBlock<IBroadcastEvent> _pressureMeasurementConsumer = new();
     private readonly HashSet<SensorType> _sensorTypes;
     private readonly IEventBus _eventBus;
     private readonly ILogger<SensorSnapshotGenerator> _logger;
@@ -24,28 +25,25 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
         _eventBus = eventBus;
         _logger = logger;
 
-        broadcaster.Subscribe<SensorMeasurement>(_measurementConsumer);
+        broadcaster.Subscribe<SensorMeasurement>(_tempretureMeasurementConsumer);
+        broadcaster.Subscribe<SensorMeasurement>(_pressureMeasurementConsumer );
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var measurements = new Dictionary<SensorType, double>();
+            var temperatureMeasurement = _tempretureMeasurementConsumer.ReceiveAsync(stoppingToken);
+            var pressureMeasurement = _pressureMeasurementConsumer.ReceiveAsync(stoppingToken);
 
-            while (measurements.Count < _sensorTypes.Count)
-            {
-                var broadcastEvent = await _measurementConsumer.ReceiveAsync(stoppingToken);
-
-                if (broadcastEvent is SensorMeasurement measurement)
-                {
-                    measurements.TryAdd(measurement.SensorType, measurement.Value);
-                }
-            }
+            var measurements = await Task.WhenAll(
+                temperatureMeasurement,
+                pressureMeasurement);
 
             var snapshot = new SensorSnapshot(
                 DateTimeOffset.UtcNow,
-                measurements);
+                measurements.Select(m => (SensorMeasurement)m)
+                            .ToDictionary(m=> m.SensorType ,m=> m.Value));
             
             await _eventBus.PublishAsync(snapshot, stoppingToken);
 
@@ -53,7 +51,6 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
                 "Generated sensor snapshot at {Timestamp}.",
                 snapshot.Timestamp);
 
-            // check there would be no issue when measurments are not created at same time
             await Task.Delay(GenerationInterval, stoppingToken);
         }
     }

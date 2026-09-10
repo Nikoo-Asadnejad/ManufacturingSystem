@@ -49,11 +49,12 @@ internal sealed class StageProcessor(
         catch (Exception exception)
         {
             logger.LogCritical(exception, $"Stage {stage.Id} failed.");
-            throw; // if one stage of a workflow fail we won't continue the rest.
+            throw; // operation should not continue.
         }
         finally
         {
-            await resourceCoordinator.ReleaseAsync(resources , cancellationToken);
+            // no cancelation in order to release the resource even when canceled.
+            await resourceCoordinator.ReleaseAsync(resources);
         }
     }
 
