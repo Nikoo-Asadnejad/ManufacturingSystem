@@ -1,4 +1,4 @@
-using ManufacturingSystem.Modules.ResourceManagement;
+namespace ManufacturingSystem.Modules.ResourceManagement;
 
 public interface IResource
 {
