@@ -1,11 +1,20 @@
+using System.Threading.Tasks.Dataflow;
 
 namespace ManufacturingSystem.Modules.Sensors;
 
-internal sealed class TemperatureSensor : ISensor
+internal sealed class TemperatureSensor(
+    BroadcastBlock<SensorMeasurement> broadcaster) : ISensor
 {
     public SensorType SensorType => SensorType.Temperature;
-    public ValueTask<double> ReadAsync(CancellationToken cancellationToken)
+
+    public async ValueTask<double> ReadAsync(CancellationToken cancellationToken)
     {
-        return ValueTask.FromResult(Random.Shared.NextDouble() * 30);
+        var value = Random.Shared.NextDouble() * 30;
+
+        await broadcaster.SendAsync(
+            new SensorMeasurement(SensorType, value),
+            cancellationToken);
+
+        return value;
     }
 }
