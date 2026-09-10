@@ -32,7 +32,8 @@ internal sealed class StageProcessor(
         IResource[] resources = [];
 
         try
-        { 
+        {
+            // wait until all required resource are aquired, only if resource is error will return empty
             resources = resourceCoordinator.Acquire(
                 stage.RequiredResourceIds,
                 cancellationToken);
@@ -41,7 +42,7 @@ internal sealed class StageProcessor(
             {
                 logger.LogCritical($"Stage :{stage.Id} could not be executed because of resource allocation. see logs for allocation errors.");
                 return;
-            }    
+            }
 
             stage.Execute(resources, cancellationToken);
 
@@ -52,7 +53,8 @@ internal sealed class StageProcessor(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, $"Stage {stage.Id} failed.");
+            logger.LogCritical(exception, $"Stage {stage.Id} failed.");
+            throw; // if one stage of a workflow fail we won't continue.
         }
         finally
         {
