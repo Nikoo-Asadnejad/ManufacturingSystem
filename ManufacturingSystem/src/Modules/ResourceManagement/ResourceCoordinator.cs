@@ -4,7 +4,7 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
 {
     private readonly Dictionary<string, Resource> _resources = CreateResourceMap(resources);
 
-    public bool Acquire(
+    public IResource[] Acquire(
         IEnumerable<string> resourceIds,
         CancellationToken cancellationToken = default)
     {
@@ -13,6 +13,14 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
         return AcquireResources(
             resourcesToAcquire,
             cancellationToken);
+    }
+
+    public void Release(IEnumerable<IResource> resources)
+    {
+        foreach (var resource in resources.Reverse())
+        {
+            GetResource(resource.Id).Release(CancellationToken.None);
+        }
     }
 
     private Resource[] GetResourcesInAcquisitionOrder(IEnumerable<string> resourceIds)
@@ -26,7 +34,7 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
         ];
     }
 
-    private static bool AcquireResources(
+    private static Resource[] AcquireResources(
         Resource[] resourcesToAcquire,
         CancellationToken acquisitionCancellationToken)
     {
@@ -38,13 +46,13 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources) : IRe
             {
                 if (!WaitUntilAcquired(resource, acquisitionCancellationToken))
                 {
-                    return false;
+                    return [];
                 }
 
                 acquiredResources.Add(resource);
             }
 
-            return true;
+            return acquiredResources.ToArray();
         }
         finally
         {

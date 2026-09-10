@@ -2,7 +2,9 @@ namespace ManufacturingSystem.Modules.ResourceManagement;
 
 public interface IResourceCoordinator
 {
-    bool Acquire(
+    IResource[] Acquire(
         IEnumerable<string> resourceIds,
         CancellationToken cancellationToken = default);
+
+    void Release(IEnumerable<IResource> resources);
 }
