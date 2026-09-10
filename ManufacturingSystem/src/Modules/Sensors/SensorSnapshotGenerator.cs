@@ -10,7 +10,6 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
     private readonly BufferBlock<SensorMeasurement> _pressureConsumer = new();
     private readonly IEventBus _eventBus;
     private readonly ILogger<SensorSnapshotGenerator> _logger;
-    private long _sequence;
 
     public SensorSnapshotGenerator(
         BroadcastBlock<SensorMeasurement> broadcaster,

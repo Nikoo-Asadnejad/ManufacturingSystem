@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../ManufacturingSystem/ManufacturingSystem.csproj" />
+        <ProjectReference Include="../../ManufacturingSystem.csproj" />
     </ItemGroup>
 
 </Project>

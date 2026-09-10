@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem", "Manu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalQueue", "ManufacturingSystem\src\Libraries\InternalQueue\InternalQueue.csproj", "{1515705C-F128-4A9A-8F57-179057BF3862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem.Test", "test\ManufacturingSystem.Test\ManufacturingSystem.Test.csproj", "{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem.Test", "ManufacturingSystem\test\ManufacturingSystem.Test\ManufacturingSystem.Test.csproj", "{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{88C00CA2-2327-49A4-8FA6-5883090A5155}"
 EndProject
