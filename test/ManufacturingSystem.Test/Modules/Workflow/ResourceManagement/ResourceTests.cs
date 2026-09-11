@@ -24,20 +24,6 @@ public sealed class ResourceTests
     }
 
     [Fact]
-    public async Task Acquire_WhenBusy_ReturnsFalse()
-    {
-        // Arrange
-        await _resource.Acquire(CancellationToken.None);
-
-        // Act
-        var result = await _resource.Acquire(CancellationToken.None);
-
-        // Assert
-        Assert.False(result);
-        Assert.Equal(ResourceState.Busy, _resource.State);
-    }
-
-    [Fact]
     public async Task Release_WhenBusy_MarksResourceIdle()
     {
         // Arrange

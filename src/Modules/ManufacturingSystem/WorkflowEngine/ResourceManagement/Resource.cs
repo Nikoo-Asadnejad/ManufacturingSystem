@@ -29,7 +29,7 @@ internal sealed class Resource : IResource
         }
         catch (Exception e)
         {
-            //log exception and mark error
+            //log exception 
             return false;
         }
         finally
@@ -51,7 +51,7 @@ internal sealed class Resource : IResource
         }
         catch (Exception e)
         {
-            //log exception and mark error
+            //log exception 
             return false;
         }
         finally
@@ -75,4 +75,8 @@ internal sealed class Resource : IResource
           comparand: (int)ResourceState.Busy) == (int)ResourceState.Busy;
     }
     
+    private void MarkError()
+    {
+        Interlocked.Exchange(ref _state , (int)ResourceState.Error);
+    }
 }
