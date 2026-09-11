@@ -43,9 +43,10 @@ internal sealed class Resource : IResource
 
     public async Task<bool> Release(CancellationToken cancellationToken)
     {
+        var markedIde = false;
         try
         {
-            MarkIdle();
+            markedIde = TryMarkIdle();
             return true;
         }
         catch (Exception e)
@@ -55,7 +56,10 @@ internal sealed class Resource : IResource
         }
         finally
         {
-            _semaphore.Release();
+            if(markedIde)
+            {
+                _semaphore.Release();
+            }
         }
     }
     
@@ -64,9 +68,11 @@ internal sealed class Resource : IResource
         Interlocked.Exchange(ref _state, (int)ResourceState.Busy);
     }
     
-    private void MarkIdle()
+    private bool TryMarkIdle()
     {
-        Interlocked.Exchange(ref _state, (int)ResourceState.Idle);
+       return Interlocked.CompareExchange(ref _state,
+          value : (int)ResourceState.Idle , 
+          comparand: (int)ResourceState.Busy) == (int)ResourceState.Busy;
     }
     
 }

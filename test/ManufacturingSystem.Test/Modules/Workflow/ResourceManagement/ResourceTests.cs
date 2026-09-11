@@ -15,9 +15,6 @@ public sealed class ResourceTests
     [Fact]
     public async Task Acquire_WhenIdle_MarksResourceBusy()
     {
-        // Arrange
-        await _resource.Release(CancellationToken.None);
-
         // Act
         var result = await _resource.Acquire(CancellationToken.None);
 
@@ -30,7 +27,6 @@ public sealed class ResourceTests
     public async Task Acquire_WhenBusy_ReturnsFalse()
     {
         // Arrange
-        await _resource.Release(CancellationToken.None);
         await _resource.Acquire(CancellationToken.None);
 
         // Act
@@ -45,7 +41,6 @@ public sealed class ResourceTests
     public async Task Release_WhenBusy_MarksResourceIdle()
     {
         // Arrange
-        await _resource.Release(CancellationToken.None);
         await _resource.Acquire(CancellationToken.None);
 
         // Act

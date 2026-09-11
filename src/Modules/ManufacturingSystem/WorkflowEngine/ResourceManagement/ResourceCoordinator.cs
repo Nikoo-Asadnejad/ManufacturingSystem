@@ -57,7 +57,7 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
         {
             foreach (var resource in resourcesToAcquire)
             {
-                if (!(await TryWaitUntilAcquired(resource, cancellationToken)))
+                if (!await resource.Acquire(cancellationToken))
                 {
                     return [];
                 }
@@ -76,25 +76,10 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
         {
             if (acquiredResources.Count != resourcesToAcquire.Length)
             {
-                await Rollback(acquiredResources , cancellationToken);
+                // aquired resources should release in case of cancellation
+                await Rollback(acquiredResources, CancellationToken.None);
             }
         }
-    }
-
-    private async Task<bool> TryWaitUntilAcquired(
-        Resource resource,
-        CancellationToken cancellationToken)
-    {
-        // assumed that resources will be freed in seconds
-        // we wait for all required to be acquired
-        while (!(await resource.Acquire(cancellationToken)))
-        {
-            if (resource.State == ResourceState.Error)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     private async Task Rollback(
@@ -115,6 +100,6 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
     
     private static Dictionary<string, Resource> CreateResourceMap(IEnumerable<Resource> resources)
     {
-        return resources.ToDictionary(resource => resource.Id, StringComparer.Ordinal);
+        return resources.DistinctBy(r=> r.Id).ToDictionary(resource => resource.Id, StringComparer.Ordinal);
     }
 }
