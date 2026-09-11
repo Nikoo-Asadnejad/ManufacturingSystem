@@ -91,7 +91,7 @@ ManufacturingSystem/
 │       └── ManufacturingSystem/   Main worker project
 │           ├── Sensors/           Sensors, measurements, and snapshots
 │           └── Workflow/          Rules, stages, resources, and workflows
-└── test/ManufacturingSystem.Test/ xUnit and Moq tests
+└── test/ManufacturingSystem.Test/ Tests
 ```
 
 ## Requirements
