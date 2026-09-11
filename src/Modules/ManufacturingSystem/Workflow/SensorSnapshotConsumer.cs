@@ -31,6 +31,7 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
         {
             if (internalEvent is not SensorSnapshot snapshot)
             {
+                //skip this event.
                 continue;
             }
 
@@ -42,13 +43,13 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError(
+                    _logger.LogCritical(
                         exception,
                         "Workflow {WorkflowId} failed to process sensor snapshot created at {Timestamp}.",
                         workflowId,
                         snapshot.Timestamp);
-
-                    continue;
+                    
+                    //continue to next workflow.
                 }
             }
         }

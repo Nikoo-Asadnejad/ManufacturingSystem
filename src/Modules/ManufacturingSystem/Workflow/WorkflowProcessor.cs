@@ -16,50 +16,26 @@ internal sealed class WorkflowProcessor(
         SensorSnapshot snapshot,
         CancellationToken cancellationToken = default)
     {
-        var workflow = GetWorkflow(workflowId);
-
-        try
+        if (_workflows.TryGetValue(workflowId, out var workflow))
         {
-            var stageIds = SelectAndLogStages(workflow, snapshot);
-            if (stageIds.Count > 0)
-            {
-                stageProcessor.Execute(stageIds, cancellationToken);
-            }
-            else
-            {
-                logger.LogWarning("No Stages were found to run for workflowId {wId}", workflow.Id);
-            }
+            return;
         }
-        catch (Exception exception)
+        
+        var stageIds = SelectAndLogStages(workflow, snapshot);
+        
+        if (stageIds.Count <= 0)
         {
-            logger.LogError(
-                exception,
-                "Workflow {Workflow} failed for sensor snapshot .",
-                workflow.GetType().Name);
+            logger.LogWarning("No Stages were found to run for workflowId {wId}", workflow.Id);
         }
+        
+        stageProcessor.Execute(stageIds, cancellationToken);
     }
-
-    private IWorkflow GetWorkflow(WorkflowId workflowId)
-    {
-        return _workflows.TryGetValue(workflowId, out var workflow)
-            ? workflow
-            : throw new KeyNotFoundException($"Workflow '{workflowId}' is not registered.");
-    }
-
+    
     private IReadOnlyCollection<StageId> SelectAndLogStages(
         IWorkflow workflow,
         SensorSnapshot snapshot)
     {
         var stageIds = workflow.SelectStages(snapshot);
-
-        if (logger.IsEnabled(LogLevel.Information))
-        {
-            logger.LogInformation(
-                "Workflow {Workflow} selected stages {Stages} for sensor snapshot.",
-                workflow.GetType().Name,
-                stageIds);
-        }
-
         return stageIds;
     }
 
