@@ -2,6 +2,7 @@ using ManufacturingSystem.Sensors;
 using ManufacturingSystem.WorkflowEngine.Rules;
 using ManufacturingSystem.WorkflowEngine.Stages;
 using ManufacturingSystem.WorkflowEngine.Workflows;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ManufacturingSystem.Test.Modules.Workflow;
@@ -17,7 +18,10 @@ public sealed class ProductionWorkflowTests
     {
         _firstRuleMock = new Mock<IRule>();
         _secondRuleMock = new Mock<IRule>();
-        _workflow = new ProductionWorkflow([_firstRuleMock.Object, _secondRuleMock.Object]);
+        var loggerMock = new Mock<ILogger<ProductionWorkflow>>();
+        _workflow = new ProductionWorkflow(
+            [_firstRuleMock.Object, _secondRuleMock.Object],
+            loggerMock.Object);
         _snapshot = new SensorSnapshot(
             new DateTimeOffset(2026, 9, 11, 0, 0, 0, TimeSpan.Zero),
             new Dictionary<SensorType, double>
