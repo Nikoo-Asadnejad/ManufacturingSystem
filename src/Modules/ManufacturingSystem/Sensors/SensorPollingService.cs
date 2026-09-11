@@ -1,7 +1,7 @@
 namespace ManufacturingSystem.Sensors;
 
 /// <summary>
-/// This service has build for development and test to simulate the data.
+/// This service has built for development and test process to simulate the data.
 /// </summary>
 /// <param name="sensors"></param>
 internal sealed class SensorPollingService(

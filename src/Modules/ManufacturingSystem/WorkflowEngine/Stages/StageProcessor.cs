@@ -14,12 +14,7 @@ internal sealed class StageProcessor(
         IReadOnlyCollection<StageId> stageIds,
         CancellationToken cancellationToken = default)
     {
-        var selectedStages = stageIds
-            .Distinct()
-            .Select(GetStage)
-            .Where(s=> s != null)
-            .Select(s=> s!)
-            .ToArray();
+        var selectedStages = GetSelectedStages(stageIds);
 
         await Parallel.ForEachAsync(
             selectedStages,
@@ -27,7 +22,7 @@ internal sealed class StageProcessor(
             async (stage, stageCancellationToken) =>
                 await ExecuteStage(stage, stageCancellationToken));
     }
-
+    
     private async Task ExecuteStage(
         IStage stage,
         CancellationToken cancellationToken)
@@ -36,7 +31,7 @@ internal sealed class StageProcessor(
 
         try
         {
-            // wait until all required resource are acquired, only if resource is error will return empty
+            // waits until all required resource are acquired, only if resource is error will return empty
             resources = await resourceCoordinator.AcquireAsync(
                 stage.RequiredResourceIds,
                 cancellationToken);
@@ -49,19 +44,16 @@ internal sealed class StageProcessor(
 
             stage.Execute(resources, cancellationToken);
 
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                logger.LogInformation("Stage {Stage} completed.", stage.Id);
-            }
+            logger.LogInformation("Stage {Stage} completed.", stage.Id);
         }
         catch (Exception exception)
         {
             logger.LogCritical(exception, $"Stage {stage.Id} failed.");
-            throw; // if one stage of a workflow fail we won't continue.
+            throw; // if one stage of a workflow fail we won't continue the rest.
         }
         finally
         {
-            await resourceCoordinator.ReleaseAsync(resources);
+            await resourceCoordinator.ReleaseAsync(resources , cancellationToken);
         }
     }
 
@@ -69,6 +61,17 @@ internal sealed class StageProcessor(
     { 
         _stages.TryGetValue(stageId, out var stage);
         return stage;
+    }
+
+    private IStage[] GetSelectedStages(IReadOnlyCollection<StageId> stageIds)
+    {
+        var selectedStages = stageIds
+            .Distinct()
+            .Select(GetStage)
+            .Where(s=> s != null)
+            .Select(s=> s!)
+            .ToArray();
+        return selectedStages;
     }
 
     private static ParallelOptions CreateParallelOptions(

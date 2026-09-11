@@ -16,7 +16,7 @@ internal sealed class WorkflowProcessor(
         SensorSnapshot snapshot,
         CancellationToken cancellationToken = default)
     {
-        if (_workflows.TryGetValue(workflowId, out var workflow))
+        if (!_workflows.TryGetValue(workflowId, out var workflow))
         {
             return;
         }
