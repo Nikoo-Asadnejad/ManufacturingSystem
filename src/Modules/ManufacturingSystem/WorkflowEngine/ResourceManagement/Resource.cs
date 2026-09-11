@@ -5,6 +5,7 @@ internal sealed class Resource : IResource
     public Resource(string id)
     {
         Id = id;
+        _state = (int)ResourceState.Idle;
     }
     public string Id { get; }
     
