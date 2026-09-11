@@ -43,11 +43,11 @@ internal sealed class Resource : IResource
 
     public async Task<bool> Release(CancellationToken cancellationToken)
     {
-        var markedIde = false;
+        var previousStateWasBusy = false;
         try
         {
-            markedIde = TryMarkIdle();
-            return true;
+            previousStateWasBusy = TryMarkIdleWhenBusy();
+            return State == ResourceState.Idle;
         }
         catch (Exception e)
         {
@@ -56,7 +56,8 @@ internal sealed class Resource : IResource
         }
         finally
         {
-            if(markedIde)
+            // releasing a resource when having idle status will cause exception because semaphore was not waited.
+            if(previousStateWasBusy)
             {
                 _semaphore.Release();
             }
@@ -68,7 +69,7 @@ internal sealed class Resource : IResource
         Interlocked.Exchange(ref _state, (int)ResourceState.Busy);
     }
     
-    private bool TryMarkIdle()
+    private bool TryMarkIdleWhenBusy()
     {
        return Interlocked.CompareExchange(ref _state,
           value : (int)ResourceState.Idle , 
