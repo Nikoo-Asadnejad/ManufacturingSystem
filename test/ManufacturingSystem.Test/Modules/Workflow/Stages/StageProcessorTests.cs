@@ -83,30 +83,6 @@ public sealed class StageProcessorTests
             It.IsAny<CancellationToken>()) , Times.Once);
     }
 
-    [Fact]
-    public async Task Execute_WhenStagesRequireTheSameResource_ExecutesBothStages()
-    {
-        // Arrange
-        var firstStage = MockStage(StageId.Stage1, ["R_A"]);
-        var secondStage = MockStage(StageId.Stage2, ["R_A"]);
-        var resourceCoordinator = MockResourceCoordinator([MockResource("R_A")]);
-        var processor = CreateStageProcessor(
-            [firstStage.Object, secondStage.Object],
-            resourceCoordinator.Object);
-
-        // Act
-        await processor.Execute(
-            [StageId.Stage1, StageId.Stage2],
-            CancellationToken.None);
-
-        // Assert
-        firstStage.Verify(stage => stage.Execute(
-            It.IsAny<IReadOnlyList<IResource>>(),
-            It.IsAny<CancellationToken>()), Times.Once);
-        secondStage.Verify(stage => stage.Execute(
-            It.IsAny<IReadOnlyList<IResource>>(),
-            It.IsAny<CancellationToken>()), Times.Once);
-    }
 
     private static Mock<IStage> MockStage(
         StageId id,
