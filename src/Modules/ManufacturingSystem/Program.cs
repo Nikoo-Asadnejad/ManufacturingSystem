@@ -1,7 +1,7 @@
 using Broadcaster;
 using InternalQueue;
-using ManufacturingSystem.Modules.Sensors;
-using ManufacturingSystem.Modules.Workflow;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine;
 
 var builder = Host.CreateApplicationBuilder(args);
 

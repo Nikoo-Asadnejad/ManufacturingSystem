@@ -1,6 +1,6 @@
 using Broadcaster;
 
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 internal sealed class PressureSensor(IBroadcaster broadcaster) : ISensor
 {

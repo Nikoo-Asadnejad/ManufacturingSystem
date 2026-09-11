@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Modules.Stages;
+namespace ManufacturingSystem.WorkflowEngine.Stages;
 
 public interface IStageProcessor
 {

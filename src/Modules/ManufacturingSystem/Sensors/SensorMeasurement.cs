@@ -1,6 +1,6 @@
 using Broadcaster;
 
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 public sealed record SensorMeasurement(
     SensorType SensorType,

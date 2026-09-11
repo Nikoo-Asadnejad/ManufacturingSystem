@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Modules.ResourceManagement;
+namespace ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
 internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogger<ResourceCoordinator> logger) : IResourceCoordinator
 {

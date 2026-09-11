@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Broadcaster;
-using ManufacturingSystem.Modules.Sensors;
+using ManufacturingSystem.Sensors;
 using Moq;
 
 namespace ManufacturingSystem.Test.Modules.Sensors;

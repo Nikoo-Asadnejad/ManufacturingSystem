@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 public interface ISensor
 {

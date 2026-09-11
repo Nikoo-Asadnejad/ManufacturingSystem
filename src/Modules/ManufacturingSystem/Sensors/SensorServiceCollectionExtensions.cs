@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 public static class SensorServiceCollectionExtensions
 {
@@ -8,6 +6,7 @@ public static class SensorServiceCollectionExtensions
     {
         services.AddSingleton<ISensor, TemperatureSensor>();
         services.AddSingleton<ISensor, PressureSensor>();
+        services.AddHostedService<SensorPollingService>();
         services.AddHostedService<SensorSnapshotGenerator>();
 
         return services;

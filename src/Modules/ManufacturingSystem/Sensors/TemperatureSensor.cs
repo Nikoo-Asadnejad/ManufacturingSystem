@@ -1,6 +1,6 @@
 using Broadcaster;
 
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 internal sealed class TemperatureSensor(IBroadcaster broadcaster) : ISensor
 {
     public SensorType SensorType => SensorType.Temperature;

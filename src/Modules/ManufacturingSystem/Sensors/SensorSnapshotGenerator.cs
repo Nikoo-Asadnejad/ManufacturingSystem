@@ -2,7 +2,7 @@ using System.Threading.Tasks.Dataflow;
 using Broadcaster;
 using InternalQueue;
 
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 internal sealed class SensorSnapshotGenerator : BackgroundService
 {

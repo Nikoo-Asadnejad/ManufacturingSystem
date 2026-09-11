@@ -1,7 +1,7 @@
-using ManufacturingSystem.Modules.Sensors;
-using ManufacturingSystem.Modules.Stages;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine.Stages;
 
-namespace ManufacturingSystem.Modules.Workflow.Rules;
+namespace ManufacturingSystem.WorkflowEngine.Rules;
 
 internal interface IRule
 {

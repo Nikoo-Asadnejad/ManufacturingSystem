@@ -1,8 +1,8 @@
-using ManufacturingSystem.Modules.Sensors;
-using ManufacturingSystem.Modules.Stages;
-using ManufacturingSystem.Modules.Workflow.Rules;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine.Rules;
+using ManufacturingSystem.WorkflowEngine.Stages;
 
-namespace ManufacturingSystem.Modules.Workflow;
+namespace ManufacturingSystem.WorkflowEngine.Workflows;
 
 internal sealed class ProductionWorkflow(IEnumerable<IRule> rules) : IWorkflow
 {

@@ -1,6 +1,6 @@
-using ManufacturingSystem.Modules.Sensors;
+using ManufacturingSystem.Sensors;
 
-namespace ManufacturingSystem.Modules.Workflow;
+namespace ManufacturingSystem.WorkflowEngine.Workflows;
 
 public interface IWorkflowProcessor
 {

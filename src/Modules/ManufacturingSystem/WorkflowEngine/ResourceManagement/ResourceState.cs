@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Modules.ResourceManagement;
+namespace ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
 public enum ResourceState : byte
 {

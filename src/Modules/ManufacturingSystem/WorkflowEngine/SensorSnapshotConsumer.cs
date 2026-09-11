@@ -1,7 +1,8 @@
 using InternalQueue;
-using ManufacturingSystem.Modules.Sensors;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine.Workflows;
 
-namespace ManufacturingSystem.Modules.Workflow;
+namespace ManufacturingSystem.WorkflowEngine;
 
 internal sealed class SensorSnapshotConsumer : BackgroundService
 {
@@ -35,6 +36,9 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
                 continue;
             }
 
+
+            _logger.LogInformation("Snap shot recieved.");
+          
             foreach (var workflowId in _workflowIds)
             {
                 try
@@ -48,7 +52,7 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
                         "Workflow {WorkflowId} failed to process sensor snapshot created at {Timestamp}.",
                         workflowId,
                         snapshot.Timestamp);
-                    
+
                     //continue to next workflow.
                 }
             }

@@ -1,9 +1,9 @@
-using ManufacturingSystem.Modules.ResourceManagement;
-using ManufacturingSystem.Modules.Stages;
+using ManufacturingSystem.WorkflowEngine.ResourceManagement;
+using ManufacturingSystem.WorkflowEngine.Stages;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace ManufacturingSystem.Test.Modules.Stages;
+namespace ManufacturingSystem.Test.Modules.Workflow.Stages;
 
 public sealed class StageProcessorTests
 {

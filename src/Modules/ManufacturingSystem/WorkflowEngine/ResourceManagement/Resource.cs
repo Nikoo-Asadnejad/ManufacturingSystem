@@ -1,7 +1,4 @@
-using System.Security.Cryptography;
-using System.Text;
-
-namespace ManufacturingSystem.Modules.ResourceManagement;
+namespace ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
 internal sealed class Resource : IResource
 {

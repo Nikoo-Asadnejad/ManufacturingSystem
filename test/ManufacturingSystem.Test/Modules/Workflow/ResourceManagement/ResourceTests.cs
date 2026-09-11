@@ -1,6 +1,6 @@
-using ManufacturingSystem.Modules.ResourceManagement;
+using ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
-namespace ManufacturingSystem.Test.Modules.ResourceManagement;
+namespace ManufacturingSystem.Test.Modules.Workflow.ResourceManagement;
 
 public sealed class ResourceTests
 {

@@ -1,16 +1,16 @@
-using ManufacturingSystem.Modules.Sensors;
-using ManufacturingSystem.Modules.Stages;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine.Stages;
 
-namespace ManufacturingSystem.Modules.Workflow.Rules;
+namespace ManufacturingSystem.WorkflowEngine.Rules;
 
-internal sealed class TemperatureAboveTwentyPressureBelowHundredRule : IRule
+internal sealed class TemperatureAboveTenPressureBelowHundredRule : IRule
 {
     public bool Matches(SensorSnapshot snapshot) =>
         snapshot.TryGetValue(SensorType.Temperature, out var temperature) &&
         snapshot.TryGetValue(SensorType.Pressure, out var pressure) &&
-        temperature > 20.0 &&
+        temperature > 10.0 &&
         pressure < 100.0;
 
     public IReadOnlyCollection<StageId> GetStages(SensorSnapshot snapshot) =>
-        [StageId.Stage1, StageId.Stage3];
+        [StageId.Stage1, StageId.Stage2];
 }

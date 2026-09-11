@@ -1,9 +1,9 @@
-using ManufacturingSystem.Modules.ResourceManagement;
-using ManufacturingSystem.Modules.Stages;
-using ManufacturingSystem.Modules.Workflow.Rules;
-using Microsoft.Extensions.DependencyInjection;
+using ManufacturingSystem.WorkflowEngine.ResourceManagement;
+using ManufacturingSystem.WorkflowEngine.Rules;
+using ManufacturingSystem.WorkflowEngine.Stages;
+using ManufacturingSystem.WorkflowEngine.Workflows;
 
-namespace ManufacturingSystem.Modules.Workflow;
+namespace ManufacturingSystem.WorkflowEngine;
 
 public static class WorkflowServiceCollectionExtensions
 {

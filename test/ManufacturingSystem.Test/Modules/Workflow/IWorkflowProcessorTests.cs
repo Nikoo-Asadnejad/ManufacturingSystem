@@ -1,6 +1,6 @@
-using ManufacturingSystem.Modules.Sensors;
-using ManufacturingSystem.Modules.Stages;
-using ManufacturingSystem.Modules.Workflow;
+using ManufacturingSystem.Sensors;
+using ManufacturingSystem.WorkflowEngine.Stages;
+using ManufacturingSystem.WorkflowEngine.Workflows;
 using Microsoft.Extensions.Logging;
 using Moq;
 

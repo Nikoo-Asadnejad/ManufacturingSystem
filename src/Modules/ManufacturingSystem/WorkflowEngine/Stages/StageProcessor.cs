@@ -1,6 +1,6 @@
-using ManufacturingSystem.Modules.ResourceManagement;
+using ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
-namespace ManufacturingSystem.Modules.Stages;
+namespace ManufacturingSystem.WorkflowEngine.Stages;
 
 internal sealed class StageProcessor(
     IEnumerable<IStage> stages,

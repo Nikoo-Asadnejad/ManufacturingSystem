@@ -1,7 +1,6 @@
-using System.Collections.ObjectModel;
 using InternalQueue;
 
-namespace ManufacturingSystem.Modules.Sensors;
+namespace ManufacturingSystem.Sensors;
 
 public sealed record SensorSnapshot : IInternalEvent
 {

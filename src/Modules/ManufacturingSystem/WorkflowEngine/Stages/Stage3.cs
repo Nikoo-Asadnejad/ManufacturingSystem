@@ -1,4 +1,4 @@
-namespace ManufacturingSystem.Modules.Stages;
+namespace ManufacturingSystem.WorkflowEngine.Stages;
 
 internal sealed class Stage3 : Stage
 {
