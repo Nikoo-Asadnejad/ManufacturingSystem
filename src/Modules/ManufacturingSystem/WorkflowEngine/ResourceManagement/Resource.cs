@@ -29,8 +29,15 @@ internal sealed class Resource : IResource
         }
         catch (Exception e)
         {
-            //log exception
+            //log exception and mark error
             return false;
+        }
+        finally
+        {
+            if(State != ResourceState.Busy)
+            {
+                 _semaphore.Release();
+            }
         }
     }
 
@@ -43,7 +50,7 @@ internal sealed class Resource : IResource
         }
         catch (Exception e)
         {
-            //log exception
+            //log exception and mark error
             return false;
         }
         finally
