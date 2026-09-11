@@ -15,8 +15,8 @@ public sealed class ProductionWorkflowTests
 
     public ProductionWorkflowTests()
     {
-        _firstRuleMock = new Mock<IRule>(MockBehavior.Strict);
-        _secondRuleMock = new Mock<IRule>(MockBehavior.Strict);
+        _firstRuleMock = new Mock<IRule>();
+        _secondRuleMock = new Mock<IRule>();
         _workflow = new ProductionWorkflow([_firstRuleMock.Object, _secondRuleMock.Object]);
         _snapshot = new SensorSnapshot(
             new DateTimeOffset(2026, 9, 11, 0, 0, 0, TimeSpan.Zero),

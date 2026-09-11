@@ -40,7 +40,7 @@ public sealed class IWorkflowProcessorTests
     }
 
     [Fact]
-    public void Execute_WhenWorkflowSelectsStages_ExecutesSelectedStages()
+    public async Task Execute_WhenWorkflowSelectsStages_ExecutesSelectedStages()
     {
         // Arrange
         StageId[] selectedStageIds = [StageId.Stage1, StageId.Stage2];
@@ -53,7 +53,7 @@ public sealed class IWorkflowProcessorTests
                 CancellationToken.None));
 
         // Act
-        var result = Record.Exception(
+        var result = await Record.ExceptionAsync(
             () => _workflowProcessor.Execute(
                 WorkflowId.Production,
                 _snapshot,
@@ -67,7 +67,7 @@ public sealed class IWorkflowProcessorTests
     }
 
     [Fact]
-    public void Execute_WhenWorkflowSelectsNoStages_DoesNotExecuteStageProcessor()
+    public async Task Execute_WhenWorkflowSelectsNoStages_DoesNotExecuteStageProcessor()
     {
         // Arrange
         _workflowMock
@@ -75,7 +75,7 @@ public sealed class IWorkflowProcessorTests
             .Returns([]);
 
         // Act
-        var result = Record.Exception(
+        var result = await Record.ExceptionAsync(
             () => _workflowProcessor.Execute(
                 WorkflowId.Production,
                 _snapshot,
