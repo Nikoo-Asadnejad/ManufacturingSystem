@@ -32,16 +32,10 @@ internal sealed class Resource : IResource
             //log exception
             return false;
         }
-        finally
-        {
-           _semaphore.Release();
-        }
     }
 
     public async Task<bool> Release(CancellationToken cancellationToken)
     {
-        await _semaphore.WaitAsync(cancellationToken);
-      
         try
         {
             MarkIdle();

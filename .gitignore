@@ -16,7 +16,9 @@
 # IDE and editor files
 .vs/
 .idea/
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
 *.suo
 *.user
 *.userosscache

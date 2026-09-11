@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build ManufacturingSystem",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Modules/ManufacturingSystem/ManufacturingSystem.csproj",
+        "-c",
+        "Debug",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

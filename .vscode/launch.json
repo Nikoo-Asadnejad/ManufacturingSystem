@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ManufacturingSystem",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/src/Modules/ManufacturingSystem/ManufacturingSystem.csproj"
+    },
+    {
+      "name": "ManufacturingSystem (CoreCLR)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build ManufacturingSystem",
+      "program": "${workspaceFolder}/src/Modules/ManufacturingSystem/bin/Debug/net10.0/ManufacturingSystem.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Modules/ManufacturingSystem",
+      "stopAtEntry": false,
+      "console": "internalConsole",
+      "justMyCode": true
+    }
+  ]
+}
