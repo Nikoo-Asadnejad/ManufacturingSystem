@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../../Libraries/InternalQueue/InternalQueue.csproj" />
+        <ProjectReference Include="..\..\Libraries\Broadcaster\Broadcaster.csproj" />
     </ItemGroup>
 
     <ItemGroup>

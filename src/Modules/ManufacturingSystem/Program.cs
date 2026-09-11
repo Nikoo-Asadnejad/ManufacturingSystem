@@ -4,13 +4,12 @@ using ManufacturingSystem.Modules.ResourceManagement;
 using ManufacturingSystem.Modules.Stages;
 using ManufacturingSystem.Modules.Workflow;
 using ManufacturingSystem.Modules.Workflow.Rules;
-using System.Threading.Tasks.Dataflow;
+using Broadcaster;
 using InternalQueue;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddSingleton(
-    new BroadcastBlock<SensorMeasurement>(measurement => measurement));
+builder.Services.AddSingleton<IBroadcaster, Broadcaster.Broadcaster>();
 builder.Services.AddSingleton<ISensor, TemperatureSensor>();
 builder.Services.AddSingleton<ISensor, PressureSensor>();
 builder.Services.AddSingleton<IEventBus, EventBus>();

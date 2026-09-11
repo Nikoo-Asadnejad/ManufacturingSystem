@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{70FC9443-0
 		docs\SystemArchitecture.svg = docs\SystemArchitecture.svg
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Broadcaster", "src\Libraries\Broadcaster\Broadcaster.csproj", "{7498B1BF-D901-4A2B-B790-17B8D49A3AD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7498B1BF-D901-4A2B-B790-17B8D49A3AD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7498B1BF-D901-4A2B-B790-17B8D49A3AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7498B1BF-D901-4A2B-B790-17B8D49A3AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7498B1BF-D901-4A2B-B790-17B8D49A3AD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1515705C-F128-4A9A-8F57-179057BF3862} = {36A79F59-0724-4C5F-91B2-D226DE416609}
@@ -44,5 +50,6 @@ Global
 		{BCA26014-62DB-4819-9D71-797BE2CE56C0} = {0D6149A3-7305-4F01-A801-ED687D99F381}
 		{0D6149A3-7305-4F01-A801-ED687D99F381} = {88C00CA2-2327-49A4-8FA6-5883090A5155}
 		{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032} = {B5426107-42E7-4459-A02A-6D3085A253B4}
+		{7498B1BF-D901-4A2B-B790-17B8D49A3AD7} = {36A79F59-0724-4C5F-91B2-D226DE416609}
 	EndGlobalSection
 EndGlobal

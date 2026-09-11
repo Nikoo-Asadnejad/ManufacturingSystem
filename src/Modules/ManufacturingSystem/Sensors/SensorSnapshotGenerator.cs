@@ -1,4 +1,5 @@
 using System.Threading.Tasks.Dataflow;
+using Broadcaster;
 using InternalQueue;
 
 namespace ManufacturingSystem.Modules.Sensors;
@@ -6,45 +7,46 @@ namespace ManufacturingSystem.Modules.Sensors;
 internal sealed class SensorSnapshotGenerator : BackgroundService
 {
     private static readonly TimeSpan GenerationInterval = TimeSpan.FromMilliseconds(100);
-    private readonly BufferBlock<SensorMeasurement> _temperatureConsumer = new();
-    private readonly BufferBlock<SensorMeasurement> _pressureConsumer = new();
+    private readonly BufferBlock<IBroadcastEvent> _measurementConsumer = new();
+    private readonly HashSet<SensorType> _sensorTypes;
     private readonly IEventBus _eventBus;
     private readonly ILogger<SensorSnapshotGenerator> _logger;
 
     public SensorSnapshotGenerator(
-        BroadcastBlock<SensorMeasurement> broadcaster,
+        IBroadcaster broadcaster,
+        IEnumerable<ISensor> sensors,
         IEventBus eventBus,
         ILogger<SensorSnapshotGenerator> logger)
     {
+        _sensorTypes = sensors
+            .Select(sensor => sensor.SensorType)
+            .ToHashSet();
         _eventBus = eventBus;
         _logger = logger;
 
-        broadcaster.LinkTo(
-            _temperatureConsumer,
-            measurement => measurement.SensorType == SensorType.Temperature);
-
-        broadcaster.LinkTo(
-            _pressureConsumer,
-            measurement => measurement.SensorType == SensorType.Pressure);
+        broadcaster.Subscribe<SensorMeasurement>(_measurementConsumer);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var temperatureMeasurement = _temperatureConsumer.ReceiveAsync(stoppingToken);
-            var pressureMeasurement = _pressureConsumer.ReceiveAsync(stoppingToken);
+            var measurements = new Dictionary<SensorType, double>();
 
-            var measurements = await Task.WhenAll(
-                temperatureMeasurement,
-                pressureMeasurement);
+            while (measurements.Count < _sensorTypes.Count)
+            {
+                var broadcastEvent = await _measurementConsumer.ReceiveAsync(stoppingToken);
+
+                if (broadcastEvent is SensorMeasurement measurement)
+                {
+                    measurements.TryAdd(measurement.SensorType, measurement.Value);
+                }
+            }
 
             var snapshot = new SensorSnapshot(
                 DateTimeOffset.UtcNow,
-                measurements.ToDictionary(
-                    measurement => measurement.SensorType,
-                    measurement => measurement.Value));
-
+                measurements);
+            
             await _eventBus.PublishAsync(snapshot, stoppingToken);
 
             _logger.LogInformation(
