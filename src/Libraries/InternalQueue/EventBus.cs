@@ -4,7 +4,7 @@ namespace InternalQueue;
 
 public sealed class EventBus : IEventBus
 {
-    private readonly Channel<IInternalEvent> _queue = Channel.CreateUnbounded<IInternalEvent>();
+    private readonly Channel<IInternalEvent> _queue = Channel.CreateBounded<IInternalEvent>(capacity: 1000);
 
     public ValueTask PublishAsync(
         IInternalEvent internalEvent,
