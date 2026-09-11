@@ -39,7 +39,7 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
             {
                 try
                 {
-                    _workflowProcessor.Execute(workflowId, snapshot, stoppingToken);
+                    await _workflowProcessor.Execute(workflowId, snapshot, stoppingToken);
                 }
                 catch (Exception exception)
                 {

@@ -12,16 +12,15 @@ internal sealed class Resource : IResource
     public string Id { get; }
     
     private int _state;
-
     public ResourceState State => (ResourceState)Volatile.Read(ref _state);
 
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public bool Acquire(CancellationToken cancellationToken)
+    public async Task<bool> Acquire(CancellationToken cancellationToken)
     {
-        _semaphore.Wait(cancellationToken);
+        await _semaphore.WaitAsync(cancellationToken);
 
-        if (Volatile.Read(ref _state) != (int)ResourceState.Idle)
+        if (State != ResourceState.Idle)
         {
             return false;
         }
@@ -38,14 +37,13 @@ internal sealed class Resource : IResource
         }
         finally
         {
-          _semaphore.Release();
+           _semaphore.Release();
         }
-        
     }
 
-    public bool Release(CancellationToken cancellationToken)
+    public async Task<bool> Release(CancellationToken cancellationToken)
     {
-        _semaphore.Wait();
+        await _semaphore.WaitAsync(cancellationToken);
       
         try
         {

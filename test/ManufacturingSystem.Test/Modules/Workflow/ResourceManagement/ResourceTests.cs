@@ -13,13 +13,13 @@ public sealed class ResourceTests
     }
 
     [Fact]
-    public void Acquire_WhenIdle_MarksResourceBusy()
+    public async Task Acquire_WhenIdle_MarksResourceBusy()
     {
         // Arrange
-        _resource.Release(CancellationToken.None);
+        await _resource.Release(CancellationToken.None);
 
         // Act
-        var result = _resource.Acquire(CancellationToken.None);
+        var result = await _resource.Acquire(CancellationToken.None);
 
         // Assert
         Assert.True(result);
@@ -27,14 +27,14 @@ public sealed class ResourceTests
     }
 
     [Fact]
-    public void Acquire_WhenBusy_ReturnsFalse()
+    public async Task Acquire_WhenBusy_ReturnsFalse()
     {
         // Arrange
-        _resource.Release(CancellationToken.None);
-        _resource.Acquire(CancellationToken.None);
+        await _resource.Release(CancellationToken.None);
+        await _resource.Acquire(CancellationToken.None);
 
         // Act
-        var result = _resource.Acquire(CancellationToken.None);
+        var result = await _resource.Acquire(CancellationToken.None);
 
         // Assert
         Assert.False(result);
@@ -42,14 +42,14 @@ public sealed class ResourceTests
     }
 
     [Fact]
-    public void Release_WhenBusy_MarksResourceIdle()
+    public async Task Release_WhenBusy_MarksResourceIdle()
     {
         // Arrange
-        _resource.Release(CancellationToken.None);
-        _resource.Acquire(CancellationToken.None);
+        await _resource.Release(CancellationToken.None);
+        await _resource.Acquire(CancellationToken.None);
 
         // Act
-        var result = _resource.Release(CancellationToken.None);
+        var result = await _resource.Release(CancellationToken.None);
 
         // Assert
         Assert.True(result);
@@ -57,16 +57,16 @@ public sealed class ResourceTests
     }
 
     [Fact]
-    public void Acquire_WhenCancelled_ThrowsOperationCanceledException()
+    public async Task Acquire_WhenCancelled_ThrowsOperationCanceledException()
     {
         // Arrange
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
 
         // Act
-        var result = Record.Exception(() => _resource.Acquire(cancellation.Token));
+        var result = await Record.ExceptionAsync(() => _resource.Acquire(cancellation.Token));
 
         // Assert
-        Assert.IsType<OperationCanceledException>(result);
+        Assert.IsAssignableFrom<OperationCanceledException>(result);
     }
 }

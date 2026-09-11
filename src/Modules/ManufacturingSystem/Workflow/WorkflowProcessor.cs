@@ -11,7 +11,7 @@ internal sealed class WorkflowProcessor(
     private readonly Dictionary<WorkflowId, IWorkflow> _workflows =
         workflows.ToDictionary(workflow => workflow.Id);
 
-    public void Execute(
+    public async Task Execute(
         WorkflowId workflowId,
         SensorSnapshot snapshot,
         CancellationToken cancellationToken = default)
@@ -28,7 +28,7 @@ internal sealed class WorkflowProcessor(
             logger.LogWarning("No Stages were found to run for workflowId {wId}", workflow.Id);
         }
         
-        stageProcessor.Execute(stageIds, cancellationToken);
+        await stageProcessor.Execute(stageIds, cancellationToken);
     }
     
     private IReadOnlyCollection<StageId> SelectAndLogStages(
@@ -38,5 +38,4 @@ internal sealed class WorkflowProcessor(
         var stageIds = workflow.SelectStages(snapshot);
         return stageIds;
     }
-
 }

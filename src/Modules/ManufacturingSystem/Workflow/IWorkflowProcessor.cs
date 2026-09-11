@@ -4,7 +4,7 @@ namespace ManufacturingSystem.Modules.Workflow;
 
 public interface IWorkflowProcessor
 {
-    void Execute(
+    Task Execute(
         WorkflowId workflowId,
         SensorSnapshot snapshot,
         CancellationToken cancellationToken = default);

@@ -10,22 +10,25 @@ internal sealed class StageProcessor(
     private readonly IReadOnlyDictionary<StageId, IStage> _stages =
         stages.ToDictionary(stage => stage.Id);
 
-    public void Execute(
+    public async Task Execute(
         IReadOnlyCollection<StageId> stageIds,
         CancellationToken cancellationToken = default)
     {
         var selectedStages = stageIds
             .Distinct()
             .Select(GetStage)
+            .Where(s=> s != null)
+            .Select(s=> s!)
             .ToArray();
 
-        Parallel.ForEach(
+        await Parallel.ForEachAsync(
             selectedStages,
             CreateParallelOptions(selectedStages.Length, cancellationToken),
-            stage => ExecuteStage(stage, cancellationToken));
+            async (stage, stageCancellationToken) =>
+                await ExecuteStage(stage, stageCancellationToken));
     }
 
-    private void ExecuteStage(
+    private async Task ExecuteStage(
         IStage stage,
         CancellationToken cancellationToken)
     {
@@ -33,8 +36,8 @@ internal sealed class StageProcessor(
 
         try
         {
-            // wait until all required resource are aquired, only if resource is error will return empty
-            resources = resourceCoordinator.Acquire(
+            // wait until all required resource are acquired, only if resource is error will return empty
+            resources = await resourceCoordinator.AcquireAsync(
                 stage.RequiredResourceIds,
                 cancellationToken);
 
@@ -58,15 +61,14 @@ internal sealed class StageProcessor(
         }
         finally
         {
-            resourceCoordinator.Release(resources);
+            await resourceCoordinator.ReleaseAsync(resources);
         }
     }
 
-    private IStage GetStage(StageId stageId)
-    {
-        return _stages.TryGetValue(stageId, out var stage)
-            ? stage
-            : throw new KeyNotFoundException($"Stage '{stageId}' is not registered.");
+    private IStage? GetStage(StageId stageId)
+    { 
+        _stages.TryGetValue(stageId, out var stage);
+        return stage;
     }
 
     private static ParallelOptions CreateParallelOptions(
