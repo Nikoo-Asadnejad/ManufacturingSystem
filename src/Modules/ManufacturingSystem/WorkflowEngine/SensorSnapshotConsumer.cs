@@ -30,14 +30,14 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
     {
         await foreach (var internalEvent in _eventBus.ReadAllAsync(stoppingToken))
         {
-            if (internalEvent is not SensorSnapshot snapshot)
+            if (internalEvent is not SensorSnapshot snapshot || snapshot is null)
             {
                 //skip this event.
                 continue;
             }
 
 
-            _logger.LogInformation("Snap shot recieved.");
+            _logger.LogInformation($"Snap shot {snapshot.Timestamp} recieved .");
           
             foreach (var workflowId in _workflowIds)
             {

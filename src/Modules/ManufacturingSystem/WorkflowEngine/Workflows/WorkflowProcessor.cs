@@ -18,6 +18,7 @@ internal sealed class WorkflowProcessor(
     {
         if (!_workflows.TryGetValue(workflowId, out var workflow))
         {
+            logger.LogError($"{workflowId} was not found to execute.");
             return;
         }
         
