@@ -17,14 +17,13 @@ internal sealed class Resource : IResource
     public async Task<bool> Acquire(CancellationToken cancellationToken)
     {
         await _semaphore.WaitAsync(cancellationToken);
-
-        if (State != ResourceState.Idle)
-        {
-            return false;
-        }
-
         try
         {
+            if (State != ResourceState.Idle)
+            {
+                return false;
+            }
+
             MarkBusy();
             return true;
         }
