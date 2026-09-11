@@ -48,7 +48,7 @@ PressureSensor ────┘               │
 
 ![Manufacturing System architecture and module diagram](docs/SystemArchitecture.svg)
 
-The sensor, workflow, stage, and resource-management modules currently live in the main `ManufacturingSystem` project and collaborate through their interfaces. `InternalQueue` is a separate project referenced by the host and provides the channel-backed event boundary between snapshot production and workflow processing.
+The sensor, workflow, stage, and resource-management modules live in the main `src/Modules/ManufacturingSystem` project and collaborate through their interfaces. `InternalQueue` is a separate library under `src/Libraries` referenced by the host and provides the channel-backed event boundary between snapshot production and workflow processing.
 
 ## Concurrency concerns
 
@@ -80,16 +80,15 @@ These synchronization guarantees are in-process only. `SemaphoreSlim`, `Volatile
 
 ```text
 ManufacturingSystem/
-├── Program.cs
+├── docs/
+│   └── SystemArchitecture.svg     Architecture and module diagram
 ├── src/
 │   ├── Libraries/InternalQueue/   In-memory Channel event bus
 │   └── Modules/
-│       ├── Sensors/               Sensors, measurements, and snapshots
-│       ├── Workflow/              Rules, workflows, and snapshot consumer
-│       ├── Stages/                Stage selection and execution
-│       └── ResourceManagement/    Resource acquisition and release
-└── test/
-    └── ManufacturingSystem.Test/  xUnit and Moq tests
+│       └── ManufacturingSystem/   Main worker project
+│           ├── Sensors/           Sensors, measurements, and snapshots
+│           └── Workflow/          Rules, stages, resources, and workflows
+└── test/ManufacturingSystem.Test/ xUnit and Moq tests
 ```
 
 ## Requirements
@@ -101,13 +100,13 @@ ManufacturingSystem/
 ```bash
 dotnet restore ManufacturingSystem.sln
 dotnet build ManufacturingSystem.sln --no-restore
-dotnet run --project ManufacturingSystem/ManufacturingSystem.csproj
+dotnet run --project src/Modules/ManufacturingSystem/ManufacturingSystem.csproj
 ```
 
 ## Run tests
 
 ```bash
-dotnet test ManufacturingSystem/test/ManufacturingSystem.Test/ManufacturingSystem.Test.csproj
+dotnet test test/ManufacturingSystem.Test/ManufacturingSystem.Test.csproj
 ```
 
 The tests use xUnit, Moq, constructor-based setup, and explicit Arrange-Act-Assert sections.

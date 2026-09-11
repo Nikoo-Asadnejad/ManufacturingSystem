@@ -12,9 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="src/Libraries/InternalQueue/**/*.cs" />
-        <Compile Remove="test/**/*.cs" />
-        <ProjectReference Include="src/Libraries/InternalQueue/InternalQueue.csproj" />
+        <ProjectReference Include="../../Libraries/InternalQueue/InternalQueue.csproj" />
     </ItemGroup>
 
     <ItemGroup>

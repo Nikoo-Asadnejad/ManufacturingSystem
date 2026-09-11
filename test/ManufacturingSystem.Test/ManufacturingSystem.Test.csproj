@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../ManufacturingSystem.csproj" />
+        <ProjectReference Include="../../src/Modules/ManufacturingSystem/ManufacturingSystem.csproj" />
     </ItemGroup>
 
 </Project>

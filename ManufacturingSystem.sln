@@ -1,14 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem", "ManufacturingSystem\ManufacturingSystem.csproj", "{BCA26014-62DB-4819-9D71-797BE2CE56C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem", "src\Modules\ManufacturingSystem\ManufacturingSystem.csproj", "{BCA26014-62DB-4819-9D71-797BE2CE56C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalQueue", "ManufacturingSystem\src\Libraries\InternalQueue\InternalQueue.csproj", "{1515705C-F128-4A9A-8F57-179057BF3862}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalQueue", "src\Libraries\InternalQueue\InternalQueue.csproj", "{1515705C-F128-4A9A-8F57-179057BF3862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem.Test", "ManufacturingSystem\test\ManufacturingSystem.Test\ManufacturingSystem.Test.csproj", "{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufacturingSystem.Test", "test\ManufacturingSystem.Test\ManufacturingSystem.Test.csproj", "{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{88C00CA2-2327-49A4-8FA6-5883090A5155}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{36A79F59-0724-4C5F-91B2-D226DE416609}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0D6149A3-7305-4F01-A801-ED687D99F381}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B5426107-42E7-4459-A02A-6D3085A253B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{70FC9443-0142-44C0-8ED5-8F7EE10530E3}"
+	ProjectSection(SolutionItems) = preProject
+		docs\SystemArchitecture.svg = docs\SystemArchitecture.svg
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +41,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1515705C-F128-4A9A-8F57-179057BF3862} = {36A79F59-0724-4C5F-91B2-D226DE416609}
 		{36A79F59-0724-4C5F-91B2-D226DE416609} = {88C00CA2-2327-49A4-8FA6-5883090A5155}
+		{BCA26014-62DB-4819-9D71-797BE2CE56C0} = {0D6149A3-7305-4F01-A801-ED687D99F381}
+		{0D6149A3-7305-4F01-A801-ED687D99F381} = {88C00CA2-2327-49A4-8FA6-5883090A5155}
+		{D5FB8681-3DA2-4E5D-B7B4-B15A31D1F032} = {B5426107-42E7-4459-A02A-6D3085A253B4}
 	EndGlobalSection
 EndGlobal
