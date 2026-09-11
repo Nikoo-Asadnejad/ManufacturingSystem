@@ -16,8 +16,8 @@ public class Broadcaster : IBroadcaster
         await _broadcastBlock.SendAsync(message, cancellationToken);
     }
 
-    public void Subscribe<TEvent>(ITargetBlock<IBroadcastEvent> consumer) where TEvent : IBroadcastEvent
+    public void Subscribe<TEvent>(ITargetBlock<IBroadcastEvent> consumer, Predicate<TEvent> filter) where TEvent : IBroadcastEvent
     {
-        _broadcastBlock.LinkTo(consumer, message => message is TEvent);
+        _broadcastBlock.LinkTo(consumer, message => message is TEvent tEvent && filter(tEvent));
     }
 }

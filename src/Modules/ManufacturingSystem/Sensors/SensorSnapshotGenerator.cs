@@ -20,8 +20,10 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
         _eventBus = eventBus;
         _logger = logger;
 
-        broadcaster.Subscribe<SensorMeasurement>(_temperatureMeasurementConsumer);
-        broadcaster.Subscribe<SensorMeasurement>(_pressureMeasurementConsumer );
+        broadcaster.Subscribe<SensorMeasurement>(_temperatureMeasurementConsumer ,
+            m=> m.SensorType == SensorType.Temperature);
+        broadcaster.Subscribe<SensorMeasurement>(_pressureMeasurementConsumer ,
+            m=> m.SensorType == SensorType.Pressure);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -31,15 +33,28 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
             var temperatureMeasurement = _temperatureMeasurementConsumer.ReceiveAsync(stoppingToken);
             var pressureMeasurement = _pressureMeasurementConsumer.ReceiveAsync(stoppingToken);
 
-            var measurements = await Task.WhenAll(
+             await Task.WhenAll(
                 temperatureMeasurement,
                 pressureMeasurement);
+            
+            var temperature = await temperatureMeasurement as SensorMeasurement;
+            var pressure = await pressureMeasurement as SensorMeasurement;
+
+            if (pressure is null || temperature is null)
+            {
+                _logger.LogError($"Broken Snapshot : temp :{temperature?.Value} , pressure : {pressure?.Value}.");
+                continue;
+            }
+
+            var measurementsMap = new Dictionary<SensorType, double>
+            {
+                [temperature!.SensorType] = temperature.Value,
+                [pressure!.SensorType] = pressure.Value
+            };
 
             var snapshot = new SensorSnapshot(
                 DateTimeOffset.UtcNow,
-                measurements.Select(m => (SensorMeasurement)m)
-                    .DistinctBy(m=> m.SensorType)
-                    .ToDictionary(m=> m.SensorType ,m=> m.Value));
+                measurementsMap);
             
             await _eventBus.PublishAsync(snapshot, stoppingToken);
 
