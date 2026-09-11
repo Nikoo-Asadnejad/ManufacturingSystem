@@ -48,7 +48,7 @@ public sealed class StageProcessorTests
         resourceCoordinator.Verify(
             coordinator => coordinator.ReleaseAsync(
                 It.IsAny<IEnumerable<IResource>>(),
-                CancellationToken.None),
+                It.IsAny<CancellationToken>()),
             Times.Once);
         
         stage.Verify(

@@ -22,10 +22,11 @@ internal sealed class WorkflowProcessor(
         }
         
         var stageIds = SelectAndLogStages(workflow, snapshot);
-        
+
         if (stageIds.Count <= 0)
         {
             logger.LogWarning("No Stages were found to run for workflowId {wId}", workflow.Id);
+            return;
         }
         
         await stageProcessor.Execute(stageIds, cancellationToken);
