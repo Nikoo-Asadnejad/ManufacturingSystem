@@ -1,8 +1,8 @@
 namespace ManufacturingSystem.WorkflowEngine.ResourceManagement;
 
-internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogger<ResourceCoordinator> logger) : IResourceCoordinator
+internal sealed class ResourceCoordinator(IEnumerable<IResource> resources, ILogger<ResourceCoordinator> logger) : IResourceCoordinator
 {
-    private readonly Dictionary<string, Resource> _resources = CreateResourceMap(resources);
+    private readonly Dictionary<string, IResource> _resources = CreateResourceMap(resources);
 
     public async Task<IResource[]> AcquireAsync(
         IEnumerable<string> resourceIds,
@@ -15,16 +15,15 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
             cancellationToken);
     }
 
-    public async Task ReleaseAsync(
-        IEnumerable<IResource> resources ,
-        CancellationToken cancellationToken = default)
+    public void Release(
+        IEnumerable<IResource> resources)
     {
         foreach (var resource in resources.Reverse())
         {
             var registeredResource = GetResource(resource.Id);
             if (registeredResource is not null)
             {
-                await registeredResource.Release(cancellationToken);
+                registeredResource.Release();
             }
         }
     }
@@ -34,7 +33,7 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
     /// </summary>
     /// <param name="resourceIds"></param>
     /// <returns></returns>
-    private Resource[] GetResourcesInAcquisitionOrder(IEnumerable<string> resourceIds)
+    private IResource[] GetResourcesInAcquisitionOrder(IEnumerable<string> resourceIds)
     {
         return
         [
@@ -48,10 +47,10 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
     }
 
     private async Task<IResource[]> AcquireResources(
-        Resource[] resourcesToAcquire,
+        IResource[] resourcesToAcquire,
         CancellationToken cancellationToken)
     {
-        var acquiredResources = new List<Resource> (resourcesToAcquire.Length);
+        var acquiredResources = new List<IResource> (resourcesToAcquire.Length);
 
         try
         {
@@ -76,29 +75,27 @@ internal sealed class ResourceCoordinator(IEnumerable<Resource> resources, ILogg
         {
             if (acquiredResources.Count != resourcesToAcquire.Length)
             {
-                // aquired resources should release in case of cancellation
-                await Rollback(acquiredResources, CancellationToken.None);
+                 Rollback(acquiredResources);
             }
         }
     }
 
-    private async Task Rollback(
-        List<Resource> resources,
-        CancellationToken cancellationToken)
+    private void Rollback(
+        List<IResource> resources)
     {
         for (var index = resources.Count - 1; index >= 0; index--)
         {
-            await resources[index].Release(cancellationToken);
+             resources[index].Release();
         }
     }
     
-    private Resource? GetResource(string resourceId)
+    private IResource? GetResource(string resourceId)
     {
         _resources.TryGetValue(resourceId, out var resource);
         return resource;
     }
     
-    private static Dictionary<string, Resource> CreateResourceMap(IEnumerable<Resource> resources)
+    private static Dictionary<string, IResource> CreateResourceMap(IEnumerable<IResource> resources)
     {
         return resources.DistinctBy(r=> r.Id).ToDictionary(resource => resource.Id, StringComparer.Ordinal);
     }

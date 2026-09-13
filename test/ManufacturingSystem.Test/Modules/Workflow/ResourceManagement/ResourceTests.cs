@@ -30,7 +30,7 @@ public sealed class ResourceTests
         await _resource.Acquire(CancellationToken.None);
 
         // Act
-        var result = await _resource.Release(CancellationToken.None);
+        var result =  _resource.Release();
 
         // Assert
         Assert.True(result);

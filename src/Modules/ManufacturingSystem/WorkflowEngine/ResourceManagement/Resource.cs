@@ -41,7 +41,7 @@ internal sealed class Resource : IResource
         }
     }
 
-    public async Task<bool> Release(CancellationToken cancellationToken)
+    public bool Release()
     {
         var previousStateWasBusy = false;
         try
@@ -75,9 +75,5 @@ internal sealed class Resource : IResource
           value : (int)ResourceState.Idle , 
           comparand: (int)ResourceState.Busy) == (int)ResourceState.Busy;
     }
-    
-    private void MarkError()
-    {
-        Interlocked.Exchange(ref _state , (int)ResourceState.Error);
-    }
+
 }

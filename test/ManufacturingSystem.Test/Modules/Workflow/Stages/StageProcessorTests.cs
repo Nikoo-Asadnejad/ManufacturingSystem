@@ -46,9 +46,8 @@ public sealed class StageProcessorTests
             Times.Once);
         
         resourceCoordinator.Verify(
-            coordinator => coordinator.ReleaseAsync(
-                It.IsAny<IEnumerable<IResource>>(),
-                It.IsAny<CancellationToken>()),
+            coordinator => coordinator.Release(
+                It.IsAny<IEnumerable<IResource>>()),
             Times.Once);
         
         stage.Verify(
@@ -78,9 +77,8 @@ public sealed class StageProcessorTests
                 It.IsAny<CancellationToken>()),
             Times.Never);
         
-        resourceCoordinator.Verify(rc=> rc.ReleaseAsync(
-            It.IsAny<IReadOnlyList<IResource>>(),
-            It.IsAny<CancellationToken>()) , Times.Once);
+        resourceCoordinator.Verify(rc=> rc.Release(
+            It.IsAny<IReadOnlyList<IResource>>()) , Times.Once);
     }
 
 
@@ -125,10 +123,8 @@ public sealed class StageProcessorTests
             .ReturnsAsync(resources.ToArray());
 
         coordinator
-            .Setup(configuredCoordinator => configuredCoordinator.ReleaseAsync(
-                It.IsAny<IEnumerable<IResource>>(),
-                It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
+            .Setup(configuredCoordinator => configuredCoordinator.Release(
+                It.IsAny<IEnumerable<IResource>>()));
 
         return coordinator;
     }

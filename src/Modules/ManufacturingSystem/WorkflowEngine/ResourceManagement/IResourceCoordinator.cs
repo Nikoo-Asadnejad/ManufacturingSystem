@@ -6,6 +6,6 @@ public interface IResourceCoordinator
         IEnumerable<string> resourceIds,
         CancellationToken cancellationToken = default);
 
-    Task ReleaseAsync(IEnumerable<IResource> resources ,
-        CancellationToken cancellationToken = default);
+    void Release(
+        IEnumerable<IResource> resources);
 }

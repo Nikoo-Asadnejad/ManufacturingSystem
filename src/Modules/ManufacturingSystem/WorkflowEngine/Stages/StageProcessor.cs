@@ -53,8 +53,7 @@ internal sealed class StageProcessor(
         }
         finally
         {
-            // no cancelation in order to release the resource even when canceled.
-            await resourceCoordinator.ReleaseAsync(resources);
+             resourceCoordinator.Release(resources);
         }
     }
 
@@ -81,9 +80,8 @@ internal sealed class StageProcessor(
         new()
         {
             CancellationToken = cancellationToken,
-            MaxDegreeOfParallelism = Math.Min(
-                Math.Max(1, stageCount),
-                Environment.ProcessorCount)
+            MaxDegreeOfParallelism = Math.Min(Math.Max(1, stageCount),
+                 Environment.ProcessorCount),
         };
 
 }
