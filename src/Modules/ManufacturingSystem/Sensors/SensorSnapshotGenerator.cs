@@ -30,39 +30,46 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var temperatureMeasurement = _temperatureMeasurementConsumer.ReceiveAsync(stoppingToken);
-            var pressureMeasurement = _pressureMeasurementConsumer.ReceiveAsync(stoppingToken);
-
-             await Task.WhenAll(
-                temperatureMeasurement,
-                pressureMeasurement);
-            
-            var temperature = await temperatureMeasurement as SensorMeasurement;
-            var pressure = await pressureMeasurement as SensorMeasurement;
-
-            if (pressure is null || temperature is null)
+            try
             {
-                _logger.LogError($"Broken Snapshot : temp :{temperature?.Value} , pressure : {pressure?.Value}.");
-                continue;
+                var temperatureMeasurement = _temperatureMeasurementConsumer.ReceiveAsync(stoppingToken);
+                var pressureMeasurement = _pressureMeasurementConsumer.ReceiveAsync(stoppingToken);
+
+                await Task.WhenAll(
+                    temperatureMeasurement,
+                    pressureMeasurement);
+            
+                var temperature = await temperatureMeasurement as SensorMeasurement;
+                var pressure = await pressureMeasurement as SensorMeasurement;
+
+                if (pressure is null || temperature is null)
+                {
+                    _logger.LogError($"Broken Snapshot : temp :{temperature?.Value} , pressure : {pressure?.Value}.");
+                    continue;
+                }
+
+                var measurementsMap = new Dictionary<SensorType, double>
+                {
+                    [temperature!.SensorType] = temperature.Value,
+                    [pressure!.SensorType] = pressure.Value
+                };
+
+                var snapshot = new SensorSnapshot(
+                    DateTimeOffset.UtcNow,
+                    measurementsMap);
+            
+                await _eventBus.PublishAsync(snapshot, stoppingToken);
+
+                _logger.LogInformation(
+                    "Generated sensor snapshot at {Timestamp}.",
+                    snapshot.Timestamp);
+
+                await Task.Delay(GenerationInterval, stoppingToken);
             }
-
-            var measurementsMap = new Dictionary<SensorType, double>
+            catch (Exception e)
             {
-                [temperature!.SensorType] = temperature.Value,
-                [pressure!.SensorType] = pressure.Value
-            };
-
-            var snapshot = new SensorSnapshot(
-                DateTimeOffset.UtcNow,
-                measurementsMap);
-            
-            await _eventBus.PublishAsync(snapshot, stoppingToken);
-
-            _logger.LogInformation(
-                "Generated sensor snapshot at {Timestamp}.",
-                snapshot.Timestamp);
-
-            await Task.Delay(GenerationInterval, stoppingToken);
+                _logger.LogError(e, "Failed to generate sensor snapshot ");
+            }
         }
     }
 
