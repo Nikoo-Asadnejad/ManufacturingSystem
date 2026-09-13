@@ -20,9 +20,9 @@ public static class WorkflowServiceCollectionExtensions
         services.AddSingleton<IStage, Stage3>();
         services.AddSingleton<IStageProcessor, StageProcessor>();
 
-        services.AddSingleton(new Resource("R_A"));
-        services.AddSingleton(new Resource("R_B"));
-        services.AddSingleton(new Resource("R_C"));
+        services.AddSingleton<IResource>(new Resource("R_A"));
+        services.AddSingleton<IResource>(new Resource("R_B"));
+        services.AddSingleton<IResource>(new Resource("R_C"));
         services.AddSingleton<IResourceCoordinator, ResourceCoordinator>();
 
         services.AddHostedService<SensorSnapshotConsumer>();

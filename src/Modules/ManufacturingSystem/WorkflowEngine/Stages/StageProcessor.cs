@@ -38,7 +38,7 @@ internal sealed class StageProcessor(
 
             if (resources.Length < stage.RequiredResourceIds.Count)
             {
-                logger.LogCritical($"Stage :{stage.Id} could not be executed because of resource allocation. see logs for allocation errors.");
+                logger.LogCritical("Stage :{StageId} could not be executed because of resource allocation. see logs for allocation errors." ,stage.Id);
                 return;
             }
 
@@ -48,7 +48,7 @@ internal sealed class StageProcessor(
         }
         catch (Exception exception)
         {
-            logger.LogCritical(exception, $"Stage {stage.Id} failed.");
+            logger.LogCritical(exception, "Stage {StageId} failed." , stage.Id);
             throw; // operation should not continue.
         }
         finally
