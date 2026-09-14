@@ -30,31 +30,37 @@ internal sealed class SensorSnapshotConsumer : BackgroundService
     {
         await foreach (var internalEvent in _eventBus.ReadAllAsync(stoppingToken))
         {
-            if (internalEvent is not SensorSnapshot snapshot || snapshot is null)
+            try
             {
-                //skip this event.
-                continue;
-            }
-
-
-            _logger.LogInformation($"Snap shot {snapshot.Timestamp} recieved .");
+                if (internalEvent is not SensorSnapshot snapshot)
+                {
+                    //skip this event.
+                    continue;
+                }
+                
+                _logger.LogInformation($"Snap shot {snapshot.Timestamp} recieved .");
           
-            foreach (var workflowId in _workflowIds)
-            {
-                try
+                foreach (var workflowId in _workflowIds)
                 {
-                    await _workflowProcessor.Execute(workflowId, snapshot, stoppingToken);
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogCritical(
-                        exception,
-                        "Workflow {WorkflowId} failed to process sensor snapshot created at {Timestamp}.",
-                        workflowId,
-                        snapshot.Timestamp);
+                    try
+                    {
+                        await _workflowProcessor.Execute(workflowId, snapshot, stoppingToken);
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogCritical(
+                            exception,
+                            "Workflow {WorkflowId} failed to process sensor snapshot created at {Timestamp}.",
+                            workflowId,
+                            snapshot.Timestamp);
 
-                    //continue to next workflow.
+                        //continue to next workflow.
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception occured in snapshot consumer.");
             }
         }
     }

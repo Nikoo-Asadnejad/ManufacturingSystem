@@ -8,11 +8,19 @@ internal sealed class ResourceCoordinator(IEnumerable<IResource> resources, ILog
         IEnumerable<string> resourceIds,
         CancellationToken cancellationToken = default)
     {
-        var resourcesToAcquire = GetResourcesInAcquisitionOrder(resourceIds);
+        try
+        {
+            var resourcesToAcquire = GetResourcesInAcquisitionOrder(resourceIds);
 
-        return await AcquireResources(
-            resourcesToAcquire,
-            cancellationToken);
+            return await AcquireResources(
+                resourcesToAcquire,
+                cancellationToken);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to acquire resources");
+            return [];
+        }
     }
 
     public void Release(
@@ -20,10 +28,17 @@ internal sealed class ResourceCoordinator(IEnumerable<IResource> resources, ILog
     {
         foreach (var resource in resources.Reverse())
         {
-            var registeredResource = GetResource(resource.Id);
-            if (registeredResource is not null)
+            try
             {
-                registeredResource.Release();
+                var registeredResource = GetResource(resource.Id);
+                if (registeredResource is not null)
+                {
+                    registeredResource.Release();
+                }
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to release resource");
             }
         }
     }
@@ -65,11 +80,6 @@ internal sealed class ResourceCoordinator(IEnumerable<IResource> resources, ILog
             }
 
             return acquiredResources.ToArray();
-        }
-        catch(Exception e)
-        {
-            logger.LogError(e ,"Exception occured during resource acquirement.");
-            return [];
         }
         finally
         {

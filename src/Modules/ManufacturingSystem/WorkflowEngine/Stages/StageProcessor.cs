@@ -31,7 +31,7 @@ internal sealed class StageProcessor(
 
         try
         {
-            // waits until all required resource are acquired, only if resource is error will return empty
+            // waits until all required resource are acquired
             resources = await resourceCoordinator.AcquireAsync(
                 stage.RequiredResourceIds,
                 cancellationToken);
