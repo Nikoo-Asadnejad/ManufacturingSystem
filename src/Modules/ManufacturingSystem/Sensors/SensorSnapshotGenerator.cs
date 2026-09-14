@@ -6,7 +6,6 @@ namespace ManufacturingSystem.Sensors;
 
 internal sealed class SensorSnapshotGenerator : BackgroundService
 {
-    private static readonly TimeSpan GenerationInterval = TimeSpan.FromMilliseconds(100);
     private readonly BufferBlock<IBroadcastEvent> _temperatureMeasurementConsumer = new(GetOption());
     private readonly BufferBlock<IBroadcastEvent> _pressureMeasurementConsumer = new(GetOption());
     private readonly IEventBus _eventBus;
@@ -64,7 +63,6 @@ internal sealed class SensorSnapshotGenerator : BackgroundService
                     "Generated sensor snapshot at {Timestamp}.",
                     snapshot.Timestamp);
 
-                await Task.Delay(GenerationInterval, stoppingToken);
             }
             catch (Exception e)
             {
